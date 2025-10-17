@@ -1,0 +1,29 @@
+<input type="file" id="fileInput" accept=".pack" />
+<div id="output"></div>
+
+<script type="module">
+import unpackPackFile from "./unpack.js"; // 如果单独存放
+
+document.getElementById("fileInput").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  const arrayBuffer = await file.arrayBuffer();
+  const files = await unpackPackFile(arrayBuffer);
+
+  const output = document.getElementById("output");
+  output.innerHTML = "";
+
+  for (const f of files) {
+    console.log(f.name);
+    
+    // const blob = new Blob([f.data]);
+    // const url = URL.createObjectURL(blob);
+
+    // const link = document.createElement("a");
+    // link.href = url;
+    // link.download = f.name;
+    // link.textContent = `Download ${f.name}`;
+    // output.appendChild(link);
+    // output.appendChild(document.createElement("br"));
+  }
+});
+</script>
