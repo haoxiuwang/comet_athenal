@@ -22,9 +22,9 @@ export default function NowPlayingBar({ctx}) {
           <IconButton
             size="small"
             color="inherit"
-            onClick={(e) => ctx.dispatch({type:"",payload:e})}
+            onClick={(e) => ctx.dispatch({type:"play_or_pause",payload:e})}
           >
-            {!ctx.audio.current.paused ? (
+            {!ctx.player.current.paused ? (
               <PauseIcon sx={{ fontSize: 20, color: "white" }} />
             ) : (
               <PlayArrowIcon sx={{ fontSize: 20, color: "white" }} />
@@ -34,7 +34,7 @@ export default function NowPlayingBar({ctx}) {
           <IconButton
             size="small"
             color="inherit"
-            onClick={(e) => ctx.dispatch({type:"play_or_pause"})}
+            onClick={(e) => ctx.dispatch({type:"open_book",payload:ctx.book})}
           >
             <OpenInNewIcon sx={{ fontSize: 18, color: "white" }} />
           </IconButton>

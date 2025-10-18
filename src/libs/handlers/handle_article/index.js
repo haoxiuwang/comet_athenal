@@ -1,4 +1,4 @@
-import setStorage from "@/libs/storage"
+import {setStorage} from "@/libs/storage"
 import {navigate} from "@/libs/router/useRouter"
 export function switch_article_style(ctx) {
     const href = ctx.path.indexOf("stylea")>-1?"/article/styleb":"/article/stylea"                           
@@ -8,7 +8,7 @@ export function switch_article_style(ctx) {
 export async function play_or_pause(ctx) {
     const _p = ctx.player.current
     await _p[_p.paused?"play":"pause"]()
-    ctx.refresh()
+    
 }
 
 export async function play_loop_mode(ctx) {
@@ -38,7 +38,7 @@ export async function change_chapter(ctx,to) {
     p.paused&&p.play()
     p.currentTime = ctx.book.chapter.start
     
-    ctx.refresh()
+    
 }
 
 export async function play_or_pause_subtitle(ctx,subtitle_index) {
@@ -49,7 +49,7 @@ export async function play_or_pause_subtitle(ctx,subtitle_index) {
         await p.play()
         p.currentTime = ctx.book.chapter.subtitles[subtitle_index].start     
     }        
-    ctx.refresh()
+    
 }
 export function app_onended(ctx){    
     if(ctx.player.loop_mode == 2)
@@ -59,12 +59,14 @@ export function app_ontimeupdate(ctx) {
     const p = ctx.player.current
     const current_time = p.currentTime
     const index = ctx.book.current_subtitle_index
-    const _index = ctx.book.current_subtitles.find((sub)=>current_time>=sub.start&&current_time=<sub.start).index
-    if(index == _index)return
-    ctx.book.current_chapter = ctx.book.chapters.find((chapter)=>current_time>=chapter.start&&current_time=<chapter.end)
+    let _index = ctx.book.current_subtitles?.find((sub)=>{
+        return (current_time>=sub.start)&&(current_time<=sub.end)
+    })?.index
+    if(!index||index == _index)return
+    ctx.book.current_chapter = ctx.book.chapters.find((chapter)=>current_time>=chapter.start&&current_time<=chapter.end)
     ctx.book.current_subtitle_index = _index
     ctx.book.current_subtitles = ctx.book.subtitles.filter((sub,index)=>Math.abs(sub.index-_index<20))
-    ctx.refresh()
+    
 }
 export function to_next_subtitle(ctx,next) {    
     let index = ctx.book.current_subtitle_index

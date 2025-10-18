@@ -17,10 +17,13 @@ export default function ArticleTopBar({ctx}) {
     setAnchorEl(null)
   }
 
+
+  
+  
   return (
     <div className="w-full bg-white shadow-md  flex items-center justify-between">
       {/* 左侧 Avatar */}
-      <Avatar src={URL.createObjectURL(ctx.book.cover)} className="w-10 h-10" />
+      <Avatar src={ctx.book?.cover} className="w-10 h-10" />
 
       {/* 中间两行 */}
       <div className="flex flex-col items-center">
@@ -48,7 +51,7 @@ export default function ArticleTopBar({ctx}) {
           </Badge>
         </IconButton>
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-          {ctx.chapters.map((chapter, idx) => (
+          {ctx.book.chapters.map((chapter, idx) => (
             <MenuItem key={idx} onClick={(e)=>{
               handleClose(e)
               ctx.dispatch({type:"change_chapter",payload:chapter})

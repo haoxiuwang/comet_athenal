@@ -2,20 +2,28 @@ import useReducer  from "./libs/useReducer";
 import reducer from "./libs/reducer"
 import Comp from "./Comp.jsx";
 import useInit from "./libs/useInit.js";
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
 export default function App() {
+    
     const ctx = useReducer(reducer,{
             player:{current:null},
             bar:{current:null},
             input:{current:null},
+            searched_text:"",
+            searched_books:[]
         }
     )
     useInit(ctx)
-    return <div>
+    
+    
+    return (
+    <div>
+       
         <Comp {...{ctx}} />
         <audio 
-            onended = {()=>dispatch({type:"onended"})}
-            onTimeUpdate={()=>dispatch({type:"ontimeupdate"})} 
+            onEnded = {()=>ctx.dispatch({type:"onended"})}
+            onTimeUpdate={()=>ctx.dispatch({type:"app_ontimeupdate"})} 
             className="hidden" 
             ref={ctx.player}
             
@@ -27,6 +35,7 @@ export default function App() {
             className="hidden"
         />
     </div>
+    )
 }
 function usePlayer(ctx) {
 

@@ -1,5 +1,4 @@
-import {
-        init,
+import {        
         open_addbook_dialoge,
         add_book,
         add_book_input_onchange,
@@ -9,6 +8,7 @@ import {
         cancel_delete_book,
         on_search_input_change        
     } from "./handlers/handle_books"
+import init from "./handlers/handle_books/init"
 import {
     switch_article_style,
     play_or_pause,
@@ -22,8 +22,8 @@ import {
 } from "./handlers/handle_article"
 
  
-export default function reducer(ctx,action){
-    const actions = {
+export default async function reducer(ctx,action){
+    const actions = {       
         init,
         open_addbook_dialoge,
         add_book,
@@ -44,6 +44,8 @@ export default function reducer(ctx,action){
         to_next_subtitle,
         change_player_progress   
     }
+    console.log({type:action.type});
+    
     const handler = actions[action.type]
-    handler(ctx,action.payload)
+    await handler(ctx,action.payload)
 }

@@ -32,7 +32,7 @@ export default function Article({ctx}) {
                         className:"fixed inset-x-0 top-0 flex place-items-center place-content-center z-50"
                     }}
                 >
-                    <ArticleTopBar />
+                    <ArticleTopBar {...{ctx}}/>
                 </SwipeContainer>
                     
                 <Main {...{ctx}}/>

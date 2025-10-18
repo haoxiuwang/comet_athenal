@@ -1,4 +1,4 @@
-export class IDB {
+export default class IDB {
   constructor(name, version, stores = {}) {
     this.name = name;
     this.version = version;

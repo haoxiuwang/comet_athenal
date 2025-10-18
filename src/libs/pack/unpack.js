@@ -1,4 +1,4 @@
-export default async function unpackPackFile(arrayBuffer) {
+export async function unpackPackFile(arrayBuffer) {
   const view = new DataView(arrayBuffer);
   const decoder = new TextDecoder("utf-8");
   let offset = 0;

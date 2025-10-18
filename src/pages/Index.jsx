@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // import FooterSearch from "../components/FooterSearch.jsx";
 import {Zoom,Tooltip,Fab, Card, CardContent, Box, Container, Typography } from "@mui/material";
 import FooterSearch from "../components/FooterSearch";
@@ -10,13 +10,17 @@ import DeleteConfirmDialog from "../components/delete_book_dialog";
 
 
 export default function Home({ctx}) {
-  
+ 
+  useEffect(()=>{
+    if(ctx.books)
+      ctx.refresh()
+  },[ctx.books])
   return (
-    <Box
+    <Box 
       sx={{
         bgcolor: "#f4efe7",
         minHeight: "100vh",
-        py: 4,
+        px: 4,
         py:8,
         fontFamily: "serif",
       }}
@@ -26,7 +30,7 @@ export default function Home({ctx}) {
           variant="h5"
           sx={{ mb: 2, color: "#2f3e2f", fontWeight: 600 }}
         >
-          Good morning, <i>Peter</i>
+          Have a Good Day, <i>Everyone</i>
         </Typography>
         {ctx.delete_book&&<DeleteConfirmDialog {...{ctx}}/>}
         <FABAddBook {...{ctx}}/>
@@ -41,7 +45,7 @@ export default function Home({ctx}) {
           }}
         >
           <Typography variant="h6" sx={{ color: "#2f3e2f", fontWeight: 600 }}>
-            Download your Pi conversation history
+            This app is helping you with interesting books!
           </Typography>
           <Typography
             variant="body2"
@@ -50,15 +54,20 @@ export default function Home({ctx}) {
             Manage history
           </Typography>
         </Card>
-    <div className="grid grid-cols-2 gap-4 p-4">
-      {ctx.books.map((book, index) => {
+    <div className="grow grid grid-cols-2 gap-4 p-4">
+      
+      {ctx.books&&ctx.books.map((book, index) => {
         const mod = index % 4;
 
         // Square Cards (1st and 2nd)
         if (mod === 0 || mod === 1) {
           return (
           <Link key={index} 
-            onClick={(e)=>ctx.dispatch({type:"open_book",payload:book})} href="/article"
+            onClick={async(e)=>{
+              ctx.book = book
+              console.log(ctx,"ctx");
+              
+            }} href="/article"
             onContextMenu={(e)=>ctx.dispatch({type:"open_delete_book",payload:book})}
           >
             <Card              
@@ -82,7 +91,10 @@ export default function Home({ctx}) {
         if (mod === 2) {
           return (
           <Link key={index} 
-            onClick={(e)=>ctx.dispatch({type:"open_book",payload:book})} href="/article"
+            onClick={async(e)=>{
+              ctx.book = book
+            }}
+            href="/article"
             onContextMenu={(e)=>ctx.dispatch({type:"delete_book",payload:book})}
           >
            <div key={index} className="rounded bg-black/60 col-span-2 grid grid-cols-2 gap-4 p-4">
@@ -103,7 +115,10 @@ export default function Home({ctx}) {
         if (mod === 3) {
           return (
           <Link key={index} 
-            onClick={(e)=>ctx.dispatch({type:"open_book",payload:book})} href="/article"
+            onClick={async(e)=>{
+              ctx.book = book
+            }}
+            href="/article"
             onContextMenu={(e)=>ctx.dispatch({type:"delete_book",payload:book})}
           >
             <Card

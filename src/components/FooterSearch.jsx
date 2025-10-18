@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-
+import Link from "@/libs/router/Link.jsx"
 
 
 export default function FooterSearch({ctx}) {
@@ -26,18 +26,22 @@ export default function FooterSearch({ctx}) {
         </div>
 
         {/* 结果列表 */}
-        {ctx.searched_books.length > 0 && (
+        {ctx.searched_books&&ctx.searched_books?.length > 0 && (
           <Paper
             elevation={3}
             className="mt-3 max-h-60 overflow-y-auto rounded-2xl border border-gray-100"
           >
             <List dense>
               {ctx.searched_books.map((book,index) => (
+                <Link
+                  onClick={(e)=>ctx.dispatch({type:"open_book",payload:book})}
+                  key={book.id}
+                  href="/article"
+                >
                 <ListItem
-                  key={item.id}
-                  button
+                  
                   className="hover:bg-gray-50 transition-colors duration-150"
-                  onClick={(e)=>ctx.dispatch({type:"open_book",payload:item})}
+                  
                 >
                   <ListItemAvatar>
                     <Avatar
@@ -52,6 +56,7 @@ export default function FooterSearch({ctx}) {
                     primaryTypographyProps={{ className: "text-gray-800" }}
                   />
                 </ListItem>
+              </Link>
               ))}
             </List>
           </Paper>
