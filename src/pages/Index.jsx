@@ -7,6 +7,7 @@ import FABAddBook from "../components/FABAddBook"
 import Link from "../libs/router/Link" 
 import AddIcon from "@mui/icons-material/Add";
 import DeleteConfirmDialog from "../components/delete_book_dialog";
+import { navigate } from "../libs/router/useRouter";
 
 
 export default function Home({ctx}) {
@@ -62,15 +63,16 @@ export default function Home({ctx}) {
         // Square Cards (1st and 2nd)
         if (mod === 0 || mod === 1) {
           return (
-          <Link key={index} 
-            onClick={async(e)=>{
-              ctx.book = book
-              console.log(ctx,"ctx");
+         
+            <Card  
+              key={index}
+                onClick={async(e)=>{
+                  ctx.book = book
+                  navigate("/article")
+                }}
               
-            }} href="/article"
-            onContextMenu={(e)=>ctx.dispatch({type:"open_delete_book",payload:book})}
-          >
-            <Card              
+              onContextMenu={(e)=>ctx.dispatch({type:"delete_book",payload:book})}
+          
               className="aspect-square overflow-hidden shadow-md rounded-2xl relative"
             >
               <img
@@ -82,7 +84,7 @@ export default function Home({ctx}) {
                 <Typography variant="subtitle1">{book.title}</Typography>
               </CardContent>
             </Card>
-          </Link>
+          
             
           );
         }
@@ -90,14 +92,17 @@ export default function Home({ctx}) {
         // Third card: text + image vertically stacked
         if (mod === 2) {
           return (
-          <Link key={index} 
+          
+           <div 
             onClick={async(e)=>{
-              ctx.book = book
-            }}
-            href="/article"
+                ctx.book = book
+                navigate("/article")
+              }}
             onContextMenu={(e)=>ctx.dispatch({type:"delete_book",payload:book})}
-          >
-           <div key={index} className="rounded bg-black/60 col-span-2 grid grid-cols-2 gap-4 p-4">
+            
+            key={index} 
+            className="rounded bg-black/60 col-span-2 grid grid-cols-2 gap-4 p-4"
+           >
             <div className="aspect-square overflow-hidden relative">
               <div className="absolute bottom-0 text-white w-full">
                 <Typography variant="subtitle1">{book.title}</Typography>
@@ -107,22 +112,23 @@ export default function Home({ctx}) {
               <img src={book.cover} alt={book.title} className="w-full h-full object-cover" />
             </Card>
           </div>
-        </Link>
+        
           );
         }
 
         // Fourth card: wide rectangular, spans two rows
         if (mod === 3) {
           return (
-          <Link key={index} 
-            onClick={async(e)=>{
-              ctx.book = book
-            }}
-            href="/article"
-            onContextMenu={(e)=>ctx.dispatch({type:"delete_book",payload:book})}
-          >
+          
             <Card
               key={index}
+              onClick={async(e)=>{
+                ctx.book = book
+                navigate("/article")
+              }}
+              onContextMenu={(e)=>ctx.dispatch({type:"delete_book",payload:book})}
+              
+              key={index} 
               className="col-span-2 row-span-2 aspect-square overflow-hidden shadow-lg rounded-2xl relative"
             >
               <img
@@ -134,7 +140,7 @@ export default function Home({ctx}) {
                 <Typography variant="h6">{book.title}</Typography>
               </CardContent>
             </Card>
-          </Link>
+         
           );
         }
 
