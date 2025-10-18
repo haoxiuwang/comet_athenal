@@ -61,6 +61,7 @@ export async function add_book_input_onchange(ctx,file){
     try {
         await ctx.db.add("audios",{id:book.id,blob:audio})
         await ctx.db.add("books",book)  
+        book.cover = URL.createObjectURL(book.cover)
         ctx.books.push(book)  
     } catch (error) {
         console.log("save:",{error});        
