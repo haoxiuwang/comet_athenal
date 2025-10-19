@@ -46,13 +46,13 @@ export default function Home({ctx}) {
           }}
         >
           <Typography variant="h6" sx={{ color: "#2f3e2f", fontWeight: 600 }}>
-            This app is helping you with interesting books!
+            Just keep enjoying what you love, <i>a huge suiprise will be waiting for you!</i>
           </Typography>
           <Typography
             variant="body2"
             sx={{ color: "#3a5f3a", mt: 1, fontWeight: 500 }}
           >
-            Manage history
+           From the inventor
           </Typography>
         </Card>
     <div className="grow grid grid-cols-2 gap-4 p-4">
@@ -66,11 +66,7 @@ export default function Home({ctx}) {
          
             <Card  
               key={index}
-                onClick={async(e)=>{
-                  ctx.book = book
-                  navigate("/article")
-                }}
-              
+              onClick={()=>ctx.dispatch({type:"open_book",payload:book})}              
               onContextMenu={(e)=>ctx.dispatch({type:"delete_book",payload:book})}
           
               className="aspect-square overflow-hidden shadow-md rounded-2xl relative"
@@ -94,10 +90,7 @@ export default function Home({ctx}) {
           return (
           
            <div 
-            onClick={async(e)=>{
-                ctx.book = book
-                navigate("/article")
-              }}
+            onClick={()=>ctx.dispatch({type:"open_book",payload:book})}
             onContextMenu={(e)=>ctx.dispatch({type:"delete_book",payload:book})}
             
             key={index} 
@@ -122,13 +115,8 @@ export default function Home({ctx}) {
           
             <Card
               key={index}
-              onClick={async(e)=>{
-                ctx.book = book
-                navigate("/article")
-              }}
+              onClick={()=>ctx.dispatch({type:"open_book",payload:book})}
               onContextMenu={(e)=>ctx.dispatch({type:"delete_book",payload:book})}
-              
-              key={index} 
               className="col-span-2 row-span-2 aspect-square overflow-hidden shadow-lg rounded-2xl relative"
             >
               <img

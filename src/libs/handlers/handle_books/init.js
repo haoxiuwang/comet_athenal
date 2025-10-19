@@ -13,6 +13,7 @@ export default async function init(ctx) {
   
     
     ctx.books.map((book)=>{
+        book.current_chapter_index = 0
         book.current_chapter = book.current_chapter?book.current_chapter:book.chapters[0]        
         book.current_subtitle_index = 0
         book.cover = URL.createObjectURL(book.cover)

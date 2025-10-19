@@ -1,5 +1,6 @@
 export default function StyleA({ctx}) {
-  console.log(ctx,"_index");
+
+  console.log(ctx.player.current.paused,"paused:");
   
   const _index = ctx.book.current_subtitle_index
   if(!ctx.book.current_subtitles)

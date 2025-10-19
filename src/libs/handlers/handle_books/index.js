@@ -1,4 +1,5 @@
 import { unpackPackFile } from "../../pack/unpack"
+import { navigate } from "../../router/useRouter"
 
 
 export function open_delete_book(ctx,book) {
@@ -16,9 +17,20 @@ export function cancel_delete_book(ctx) {
     
 }
 
-
-export function open_book(ctx,book){
+export function navigate_to(ctx,href) {
+  navigate(href)
+}
+export async function open_book(ctx,book){
     ctx.book = book
+    try {
+      const {blob} = await ctx.db.get("audios",book.id)
+      ctx.player.current.src = URL.createObjectURL(blob)
+      navigate("/article")
+    } catch (error) {
+      console.log({db:ctx.db.db});
+      
+    }
+    
 }
 export function open_addbook_dialoge(ctx){
     ctx.input.current.click()

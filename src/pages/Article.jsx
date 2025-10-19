@@ -36,7 +36,7 @@ export default function Article({ctx}) {
                 </SwipeContainer>
                     
                 <Main {...{ctx}}/>
-                <ArticleFooter {...{ctx}}/>
+                {false||<ArticleFooter {...{ctx}}/>}
             </Container>    
         </Box>
     )

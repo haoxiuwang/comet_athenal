@@ -4,6 +4,7 @@ import Comp from "./Comp.jsx";
 import useInit from "./libs/useInit.js";
 
 import { useEffect, useState } from "react";
+import { Login } from "@mui/icons-material";
 export default function App() {
     
     const ctx = useReducer(reducer,{
@@ -23,7 +24,13 @@ export default function App() {
         <Comp {...{ctx}} />
         <audio 
             onEnded = {()=>ctx.dispatch({type:"onended"})}
-            onTimeUpdate={()=>ctx.dispatch({type:"app_ontimeupdate"})} 
+            onTimeUpdate={
+                ()=>ctx.dispatch({type:"app_ontimeupdate"})                
+            } 
+            onCanPlay={()=>{
+                ctx.player.current.play()
+                
+            }}
             className="hidden" 
             ref={ctx.player}
             

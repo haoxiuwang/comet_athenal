@@ -38,7 +38,7 @@ export default function ArticleTopBar({ctx}) {
           className="text-gray-700 hover:text-black"
         >
           <Badge
-            badgeContent={ctx.book.current_chapter.index}
+            badgeContent={ctx.book.current_chapter_index}
             overlap="circular"
             sx={{
               "& .MuiBadge-badge": {

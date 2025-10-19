@@ -3,6 +3,7 @@ import {
   IconButton,
   Box,
   Tooltip,
+  LinearProgress
 } from "@mui/material"
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious"
 import SkipNextIcon from "@mui/icons-material/SkipNext"
@@ -15,27 +16,37 @@ import RepeatOneIcon from "@mui/icons-material/RepeatOne"
 export default function FooterBar({ctx}) {
   usePlayer(ctx)
   const player = ctx.player.current
-  const isPlaying = !player?.paused
-  const progress = (player.currentTime-ctx.book.current_chapter.start)/(ctx.book.current_chapter.start-ctx.book.current_chapter.end)*100
+  const progress = false?80:(player.currentTime)/(player.duration)*100
+  
+  
   const loopMode = ctx.player.loopMode  
   return (
     <div 
-      ref={ctx.bar}
-      className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-t border-gray-200 shadow-[0_-2px_6px_rgba(0,0,0,0.05)]"
-      onClick={(e)=>ctx.dispatch({type:"change_player_progress",payload:e})}
-    >
+      
+      className="fixed bottom-0 inset-x-0 z-50 ">
       {/* 顶部细进度条 */}
       <div
-        className="h-[3px] w-full transition-all duration-150"
-        
-        style={{
-          width: `${progress}%`,
-          background: `linear-gradient(to right, #2563eb ${progress}%, transparent ${progress}%)`
-        }}
-      />
-
+        ref={ctx.bar}
+        className="w-full bg-white/80 backdrop-blur-lg border-t border-gray-200 shadow-[0_-2px_6px_rgba(0,0,0,0.05)] flex flex-col"
+        onClick={(e)=>ctx.dispatch({type:"change_player_progress",payload:e})}
+      >     
+        <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{
+              height: 8,
+              borderRadius: 4,
+              "& .MuiLinearProgress-bar": {
+                backgroundColor: "#2196f3",
+              },
+              backgroundColor: "#555",
+            }}
+        />
+      </div>
+      <div className="h-8 w-full bg-black">hello</div>
       {/* 控制区域 */}
-      <Box className="flex items-center justify-center gap-4 py-2">
+      {true||(
+        <Box className="flex items-center justify-center gap-4 py-2">
         <Tooltip title="回到章的开始">
           <IconButton 
             onClick={ctx.dispatch({type:"change_chapter",payload:ctx.book.current_chapter})}
@@ -60,7 +71,7 @@ export default function FooterBar({ctx}) {
             "&:hover": { backgroundColor: "#1e40af" },
           }}
         >
-          {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+          {!player.paused ? <PauseIcon /> : <PlayArrowIcon />}
         </IconButton>
 
         <Tooltip title="下一章">
@@ -85,7 +96,9 @@ export default function FooterBar({ctx}) {
           </IconButton>
         </Tooltip>
       </Box>
+      )}
     </div>
+  
   )
 }
 
@@ -94,8 +107,12 @@ function usePlayer(ctx) {
   const [_,refresh] = useState(false)
   useEffect(()=>{
     const player = ctx.player.current
-    player.onupdatetime = ()=>{      
+    const on_time_update = ()=>{
       refresh(_=>!_)
+    }
+    player.addEventListener("ontimeupdate",on_time_update)
+    return ()=>{
+      player.removeEventListener("ontimeupdate",on_time_update)
     }
   },[ctx.player.current])
 

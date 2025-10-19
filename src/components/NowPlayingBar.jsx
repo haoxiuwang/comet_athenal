@@ -22,7 +22,7 @@ export default function NowPlayingBar({ctx}) {
           <IconButton
             size="small"
             color="inherit"
-            onClick={(e) => ctx.dispatch({type:"play_or_pause",payload:e})}
+            onClick={(e) => ctx.dispatch({type:"play_or_pause"})}
           >
             {!ctx.player.current.paused ? (
               <PauseIcon sx={{ fontSize: 20, color: "white" }} />
@@ -34,7 +34,7 @@ export default function NowPlayingBar({ctx}) {
           <IconButton
             size="small"
             color="inherit"
-            onClick={(e) => ctx.dispatch({type:"open_book",payload:ctx.book})}
+            onClick={(e) => ctx.dispatch({type:"navigate_to",payload:"/article"})}
           >
             <OpenInNewIcon sx={{ fontSize: 18, color: "white" }} />
           </IconButton>

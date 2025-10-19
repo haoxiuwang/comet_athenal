@@ -42,12 +42,14 @@ export async function change_chapter(ctx,to) {
 }
 
 export async function play_or_pause_subtitle(ctx,subtitle_index) {
+    console.log({subtitle_index});
     const p = ctx.player.current
     if(!p.paused)
         await p.pause()         
     else{
-        await p.play()
-        p.currentTime = ctx.book.chapter.subtitles[subtitle_index].start     
+        ctx.book.current_subtitle_index = subtitle_index
+        p.currentTime = ctx.book.subtitles[subtitle_index].start         
+        await p.play()        
     }        
     
 }
@@ -58,11 +60,14 @@ export function app_onended(ctx){
 export function app_ontimeupdate(ctx) {
     const p = ctx.player.current
     const current_time = p.currentTime
+   
+    
     const index = ctx.book.current_subtitle_index
-    let _index = ctx.book.current_subtitles?.find((sub)=>{
+    
+    let _index = ctx.book.subtitles.find((sub)=>{
         return (current_time>=sub.start)&&(current_time<=sub.end)
     })?.index
-    if(!index||index == _index)return
+    if(index == _index)return
     ctx.book.current_chapter = ctx.book.chapters.find((chapter)=>current_time>=chapter.start&&current_time<=chapter.end)
     ctx.book.current_subtitle_index = _index
     ctx.book.current_subtitles = ctx.book.subtitles.filter((sub,index)=>Math.abs(sub.index-_index<20))

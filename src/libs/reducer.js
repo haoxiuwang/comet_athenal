@@ -1,4 +1,5 @@
-import {        
+import { 
+        navigate_to,    
         open_addbook_dialoge,
         add_book,
         add_book_input_onchange,
@@ -25,6 +26,7 @@ import {
 export default async function reducer(ctx,action){
     const actions = {       
         init,
+        navigate_to,
         open_addbook_dialoge,
         add_book,
         add_book_input_onchange,
@@ -44,7 +46,7 @@ export default async function reducer(ctx,action){
         to_next_subtitle,
         change_player_progress   
     }
-    console.log({type:action.type});
+    
     
     const handler = actions[action.type]
     await handler(ctx,action.payload)
