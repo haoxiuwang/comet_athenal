@@ -23,7 +23,11 @@ export default function ArticleTopBar({ctx}) {
   return (
     <div className="w-full bg-white shadow-md  flex items-center justify-between">
       {/* 左侧 Avatar */}
-      <Avatar src={ctx.book?.cover} className="w-10 h-10" />
+    <Avatar 
+      onClick={()=>ctx.dispatch({type:"navigate_to",payload:"/"})}
+      src={ctx.book?.cover} 
+      className={`w-10 h-10 ${ctx.player.current.paused?"":"animate-spin"}`}
+      />
 
       {/* 中间两行 */}
       <div className="flex flex-col items-center">

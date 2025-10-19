@@ -21,8 +21,8 @@ export default function Home({ctx}) {
       sx={{
         bgcolor: "#f4efe7",
         minHeight: "100vh",
-        px: 4,
-        py:8,
+        px: 0,
+        py:10,
         fontFamily: "serif",
       }}
     >
@@ -46,13 +46,13 @@ export default function Home({ctx}) {
           }}
         >
           <Typography variant="h6" sx={{ color: "#2f3e2f", fontWeight: 600 }}>
-            Just keep enjoying what you love, <i>a huge suiprise will be waiting for you!</i>
+            Only enjoying what you love can make you success!
           </Typography>
           <Typography
             variant="body2"
             sx={{ color: "#3a5f3a", mt: 1, fontWeight: 500 }}
           >
-           From the inventor
+           From the developer
           </Typography>
         </Card>
     <div className="grow grid grid-cols-2 gap-4 p-4">

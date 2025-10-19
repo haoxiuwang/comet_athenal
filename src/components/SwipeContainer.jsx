@@ -9,6 +9,7 @@ import React, { useRef } from "react"
  *  - children: ReactNode
  */
 export default function SwipeContainer({
+  onClick,
   onSwipeUp,
   onSwipeDown,
   onSwipeLeft,
@@ -34,8 +35,12 @@ export default function SwipeContainer({
     const dx = touchEnd.current.x - touchStart.current.x
     const dy = touchEnd.current.y - touchStart.current.y
 
-    if (Math.abs(dx) < threshold && Math.abs(dy) < threshold) return
+    if (Math.abs(dx) < threshold && Math.abs(dy) < threshold) {
+      if(onClick)onClick()
+      return
+    }
 
+    
     if (Math.abs(dx) > Math.abs(dy)) {
       // 水平滑动
       if (dx > 0) onSwipeRight && onSwipeRight()
@@ -50,6 +55,7 @@ export default function SwipeContainer({
   return (
     <div
       className={`touch-none ${className}`}
+     
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}

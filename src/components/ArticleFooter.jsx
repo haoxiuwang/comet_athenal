@@ -43,13 +43,13 @@ export default function FooterBar({ctx}) {
             }}
         />
       </div>
-      <div className="h-8 w-full bg-black">hello</div>
+   
       {/* 控制区域 */}
-      {true||(
+      {false||(
         <Box className="flex items-center justify-center gap-4 py-2">
         <Tooltip title="回到章的开始">
           <IconButton 
-            onClick={ctx.dispatch({type:"change_chapter",payload:ctx.book.current_chapter})}
+            onClick={()=>ctx.dispatch({type:"change_chapter",payload:ctx.book.current_chapter})}
             color="primary">
             <FirstPageIcon />
           </IconButton>
@@ -64,7 +64,7 @@ export default function FooterBar({ctx}) {
         </Tooltip>
 
         <IconButton
-          onClick={ctx.dispatch({type:"play_or_pause"})}
+          onClick={()=>ctx.dispatch({type:"play_or_pause"})}
           sx={{
             backgroundColor: "#2563eb",
             color: "white",
@@ -76,7 +76,7 @@ export default function FooterBar({ctx}) {
 
         <Tooltip title="下一章">
           <IconButton
-            onClick={ctx.dispatch({type:"change_chapter",payload:"next"})}
+            onClick={()=>ctx.dispatch({type:"change_chapter",payload:"next"})}
             color="primary">
             <SkipNextIcon />
           </IconButton>
