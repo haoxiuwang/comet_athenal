@@ -5,32 +5,44 @@ import useInit from "./libs/useInit.js";
 
 import { useEffect, useState } from "react";
 import { Login } from "@mui/icons-material";
+import { app_ontimeupdate } from "./libs/handlers/handle_article/index.js";
+import CuteUnlockScreen from "./components/Unlock.jsx";
 export default function App() {
     
     const ctx = useReducer(reducer,{
             player:{current:null},
             bar:{current:null},
+            bar2:{current:null},
             input:{current:null},
             searched_text:"",
-            searched_books:[]
+            searched_books:[],
+            article_font_size:1,//0:sm,1:lg,2:3xl
+            locals:{},
+            loading:false
+            
         }
     )
     useInit(ctx)
-    
+  
     
     return (
     <div>
-       
-        <Comp {...{ctx}} />
+        {true||(<div className="fixed left-0 top-0 z-[100001] bg-white rounded p-2" onClick={()=>localStorage.clear()}>clear storage</div>)}
+        {
+        ctx.registered&&!ctx.registered.default&&
+            (
+                <div className="fixed inset-0 z-[100000]">
+                    <CuteUnlockScreen {...{ctx}}/>
+                </div>
+            )             
+        }
+        <Comp {...{ctx}} /> 
         <audio 
             onEnded = {()=>ctx.dispatch({type:"onended"})}
             onTimeUpdate={
-                ()=>ctx.dispatch({type:"app_ontimeupdate"})                
-            } 
-            onCanPlay={()=>{
-                ctx.player.current.play()
                 
-            }}
+            ()=> app_ontimeupdate(ctx)                
+            }             
             className="hidden" 
             ref={ctx.player}
             

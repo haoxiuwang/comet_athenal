@@ -1,56 +1,77 @@
-import { setStorage } from "@/libs/storage"
-import { navigate } from "@/libs/router/useRouter"
-export function switch_article_style(ctx) {
-    const href = ctx.path.indexOf("stylea") > -1 ? "/article/styleb" : "/article/stylea"
+import { setStorage } from "../../storage"
+import { navigate } from "../../router/useRouter"
+import { save_to_local_storage } from "../handle_books"
+export function article_font_size(ctx) {
+    console.log("font_size:",ctx.article_font_size);
+    ctx.article_font_size++
+    if(ctx.article_font_size==3)ctx.article_font_size = 0   
+    setStorage("font_size",ctx.article_font_size)
+    console.log("font_size:",ctx.article_font_size);
+    
+}
+export function switch_article_style(ctx) { 
+    
+    const href = ctx.path.indexOf("styleb") > -1 ? "/article/stylea" : "/article/styleb"
+    console.log(href);
     navigate(href)
 }
 
 export async function play_or_pause(ctx) {
     const player = ctx.player.current;
-    if(player.paused)
-    await player.play()
-    else
-        player.pause()
+    if(player.paused){
+        await player.play()            
+        return
+    }    
+    player.pause()
 }
 
 
-export async function play_loop_mode(ctx) {
-    const m = ctx.loop_mode
-    ctx.loop_mode === "none" ? "all" : m === "all" ? "one" : "none"
+export function play_loop_mode(ctx) {
+    let m = ctx.player.loop_mode
+    m = ctx.player.loop_mode = ++m==3?0:m
+    setStorage("loop_mode",m)
+       
 }
 
 export async function change_chapter(ctx, to) {
-    if (ctx.book.chapters.length == 1) return
-    const chapter = ctx.book.current_chapter
-    const index = ctx.book.current_chapter.index
+   
+    
+    // if (ctx.book.chapters.length == 1) return
+    let player = ctx.player.current
+    !player.paused&&player.pause()
+    let index = ctx.book.current_chapter_index
+    let current_chapter
     switch (to) {
-        case "previous":
-            if (index == 0) return
-            ctx.book.chapter = ctx.chapters[--index]
+        case "previous":            
+            ctx.book.current_chapter_index = --index<0?0:index
+            current_chapter = ctx.book.chapters[ctx.book.current_chapter_index]
             break;
         case "next":
-            if (index == ctx.book.chapters.length - 1) return
-            ctx.book.chapter = ctx.chapters[++index]
+            ctx.book.current_chapter_index = ++index==ctx.book.chapters.length?index-1:index            
+            current_chapter = ctx.book.chapters[ctx.book.current_chapter_index]
             break;
-
         default:
-            ctx.book.chapter = to
+            current_chapter = to
             break;
     }
-    const p = ctx.player.current
-    p.paused && p.play()
-    p.currentTime = ctx.book.chapter.start
+    
+    player.play()
+    player.currentTime = current_chapter.start
 
 
 }
 
 export async function play_or_pause_subtitle(ctx, subtitle_index) {
 
-    const p = ctx.player.current
-    if (subtitle_index)
-        ctx.book.current_subtitle_index = subtitle_index
-    p.currentTime = ctx.book.subtitles[subtitle_index].start
-    await p[p.paused ? "play" : "pause"]()
+    const player = ctx.player.current;
+    if(player.paused){
+        await player.play()   
+        if (subtitle_index)
+            ctx.book.current_subtitle_index = subtitle_index
+        player.currentTime = ctx.book.subtitles[ctx.book.current_subtitle_index].start
+        return
+    }    
+    player.pause()
 
 }
 export function app_onended(ctx) {
@@ -58,20 +79,31 @@ export function app_onended(ctx) {
         player.currentTime = 0
 }
 export function app_ontimeupdate(ctx) {
+    
     const p = ctx.player.current
     const current_time = p.currentTime
-
-
     const index = ctx.book.current_subtitle_index
-
     let _index = ctx.book.subtitles.find((sub) => {
         return (current_time >= sub.start) && (current_time <= sub.end)
     })?.index
     if (index == _index) return
-    ctx.book.current_chapter = ctx.book.chapters.find((chapter) => current_time >= chapter.start && current_time <= chapter.end)
+    
+    
+    const {first_subtitle_index,last_subtitle_index} = ctx.book.chapters[ctx.book.current_chapter_index]
+    
+    
+    if(ctx.player.loop_mode==1&&_index==last_subtitle_index){       
+        
+        p.currentTime = ctx.book.subtitles[first_subtitle_index].start
+        return
+    }
+    const current_chapter = ctx.book.chapters.find((chapter) => current_time >= chapter.start && current_time <= chapter.end)
+    
+    if(current_chapter)ctx.book.current_chapter_index = current_chapter.index
     ctx.book.current_subtitle_index = _index
-    ctx.book.current_subtitles = ctx.book.subtitles.filter((sub, index) => Math.abs(sub.index - _index < 20))
+    ctx.book.current_subtitles = ctx.book.subtitles.filter((sub, index) => sub.index - _index < 20)
 
+    ctx.refresh()
 }
 export function to_next_subtitle(ctx, next) {
     let index = ctx.book.current_subtitle_index
@@ -99,5 +131,20 @@ export function change_player_progress(ctx, e) {
     const newTime = ratio * player.duration;
     console.log({ newTime });
 
+    player.currentTime = newTime;
+}
+export function change_player_progress_chapter(ctx, e) {
+    const player = ctx.player.current
+    const bar = ctx.bar2.current
+    const chapter = ctx.book.chapters[ctx.book.current_chapter_index]
+    const rect = bar.getBoundingClientRect();
+    const clickX = e.clientX - rect.left; // 点击位置相对于进度条左边的偏移
+    const ratio = clickX / rect.width; // 点击比例
+    const chapter_time_length = chapter.end-chapter.start
+    const newTime = ratio * (chapter_time_length)+chapter.start;
+    console.log({ratio,chapter_time_length,start:chapter.start});
+    
+    console.log({newTime});
+    
     player.currentTime = newTime;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import Link from "@/libs/router/Link.jsx"
+import Link from "../libs/router/Link.jsx"
 
 
 export default function FooterSearch({ctx}) {

@@ -6,14 +6,32 @@ import { Box, Container } from "@mui/material";
 import SwipeContainer from "../components/SwipeContainer.jsx";
 import { Swipe } from "@mui/icons-material";
 import {navigate} from "../libs/router/useRouter.js"
+
+import { useEffect } from "react";
+import { setStorage } from "../libs/storage.js";
 export default function Article({ctx}) {
-    let Main = ctx.path=="/article/styleb"?StyleB:StyleA
-  
+    let Main = /stylea/img.test(ctx.path)?StyleA:StyleB
+    let font_size = ctx.article_font_size
+    font_size=font_size==0?"text-xl":font_size==1?"text-2xl":"text-3xl"
+
+ 
    
+    useEffect(()=>{
+        return ()=>{
+            if(!ctx.book){
+                ctx.navigate("/")
+            }
+            ctx.dispatch({type:"save_to_local_storage"})
+        }
+    },[])
+
+    ctx.book = ctx.book??ctx.books?ctx.books[0]:null
+    if(ctx.book)
     return(
         <Box
+            className="bg-purple-100"
               sx={{
-                bgcolor: "#f4efe7",
+                // bgcolor: "#f4efe7",
                 minHeight: "100vh",
                 py: 4,               
                 fontFamily: "serif",
@@ -24,7 +42,7 @@ export default function Article({ctx}) {
                     {...{
                         
                         onSwipeLeft:()=>{
-                            ctx.dispatch({type:"switch_article_style"})
+                            ctx.dispatch({type:"article_font_size"})
                         },
                         onSwipeRight:()=>{
                             ctx.dispatch({type:"switch_article_style"})                           
@@ -35,7 +53,9 @@ export default function Article({ctx}) {
                     <ArticleTopBar {...{ctx}}/>
                 </SwipeContainer>
                     
-                <Main {...{ctx}}/>
+                <main className={font_size}>
+                    <Main {...{ctx}}/>
+                </main>
                 {false||<ArticleFooter {...{ctx}}/>}
             </Container>    
         </Box>

@@ -1,8 +1,9 @@
 
     // components/TopBar.jsx
-import { Avatar, Badge,IconButton, Menu, MenuItem } from "@mui/material"
+import { Typography,Avatar, Badge,IconButton, Menu, MenuItem } from "@mui/material"
 import MenuIcon from "@mui/icons-material/Menu"
 import {useState} from "react"
+import SwipeContainer from "./SwipeContainer"
 export default function ArticleTopBar({ctx}) {
   
   
@@ -21,17 +22,31 @@ export default function ArticleTopBar({ctx}) {
   
   
   return (
-    <div className="w-full bg-white shadow-md  flex items-center justify-between">
+    <div className="w-full bg-white shadow-md select-none  flex items-center p-2 space-x-2">
       {/* 左侧 Avatar */}
     <Avatar 
       onClick={()=>ctx.dispatch({type:"navigate_to",payload:"/"})}
       src={ctx.book?.cover} 
-      className={`w-10 h-10 ${ctx.player.current.paused?"":"animate-spin"}`}
+      className={`w-10 h-10 ${ctx.player.current?.paused?"":"animate-spin"}`}
       />
 
       {/* 中间两行 */}
-      <div className="flex flex-col items-center">
-        <span className="font-semibold text-lg">{ctx.book.title}</span>        
+      
+     
+      <div className="overflow-x-hidden grow">
+        <Typography
+        sx={{
+          display: "inline-block",
+          px: 2,
+          animation: "scroll-left 10s linear infinite",
+          "@keyframes scroll-left": {
+            "0%": { transform: "translateX(100%)" },
+            "100%": { transform: "translateX(-100%)" },
+          },
+        }}
+      >
+        🌟 {ctx.book.title} 🌟
+      </Typography> 
       </div>
 
       {/* 右侧 Menu */}
@@ -55,14 +70,19 @@ export default function ArticleTopBar({ctx}) {
           </Badge>
         </IconButton>
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-          {ctx.book.chapters.map((chapter, idx) => (
+          {ctx.book.chapters.map((chapter, idx) => {
+        
+            
+            return (           
+            
             <MenuItem key={idx} onClick={(e)=>{
               handleClose(e)
               ctx.dispatch({type:"change_chapter",payload:chapter})
             }}>
-              <div className={ctx.book.current_chapter==chapter?"underline":""}>Chapter {chapter.index}</div>
+              <div className={ctx.book.current_chapter_index==chapter.index?"underline":""}>Chapter {chapter.index}</div>
             </MenuItem>
-          ))}
+          )
+          })}
         </Menu>
       </div>
     </div>

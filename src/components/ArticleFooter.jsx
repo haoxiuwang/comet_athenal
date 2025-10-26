@@ -13,44 +13,54 @@ import FirstPageIcon from "@mui/icons-material/FirstPage"
 import LoopIcon from "@mui/icons-material/Loop"
 import RepeatOneIcon from "@mui/icons-material/RepeatOne"
 
+import useplayer_for_progress_bar from "../libs/useplayer_for_progress_bar"
+
 export default function FooterBar({ctx}) {
-  usePlayer(ctx)
+  useplayer_for_progress_bar(ctx)
   const player = ctx.player.current
-  const progress = false?80:(player.currentTime)/(player.duration)*100
+  const chapter = ctx.book.chapters[ctx.book.current_chapter_index]
   
   
-  const loopMode = ctx.player.loopMode  
+  const chapter_time_length = chapter.end-chapter.start
+  const progress = (player.currentTime)/(player.duration)*100
+  const progress2 = 100*(player.currentTime-chapter.start)/chapter_time_length
+  
+  const loopMode = ctx.player.loop_mode   
+  
   return (
+    
     <div 
       
-      className="fixed bottom-0 inset-x-0 z-50 ">
+      className={`bg-gradient-to-b from-transparent to-blue-400 fixed bottom-0 inset-x-0 z-50  p-2`}>
       {/* 顶部细进度条 */}
-      <div
+      {true||(<div
         ref={ctx.bar}
         className="w-full bg-white/80 backdrop-blur-lg border-t border-gray-200 shadow-[0_-2px_6px_rgba(0,0,0,0.05)] flex flex-col"
         onClick={(e)=>ctx.dispatch({type:"change_player_progress",payload:e})}
       >     
         <LinearProgress
             variant="determinate"
+
             value={progress}
             sx={{
-              height: 8,
-              borderRadius: 4,
+              height: 2,
+              // borderRadius: 4,
               "& .MuiLinearProgress-bar": {
-                backgroundColor: "#2196f3",
+                backgroundColor: "#2a14ecff",
               },
-              backgroundColor: "#555",
+              backgroundColor: "#fff",
             }}
         />
-      </div>
+      </div>)}
    
       {/* 控制区域 */}
       {false||(
-        <Box className="flex items-center justify-center gap-4 py-2">
+        <Box className="flex text-white items-center justify-center gap-4 py-2 ">
         <Tooltip title="回到章的开始">
           <IconButton 
-            onClick={()=>ctx.dispatch({type:"change_chapter",payload:ctx.book.current_chapter})}
-            color="primary">
+           
+            onClick={()=>ctx.dispatch({type:"change_chapter",payload:ctx.book.chapters[ctx.book.current_chapter_index]})}
+            color="inherit">
             <FirstPageIcon />
           </IconButton>
         </Tooltip>
@@ -58,7 +68,7 @@ export default function FooterBar({ctx}) {
         <Tooltip title="上一章">
           <IconButton
             onClick={()=>ctx.dispatch({type:"change_chapter",payload:"previous"})}
-            color="primary">
+            color="inherit">
             <SkipPreviousIcon />
           </IconButton>
         </Tooltip>
@@ -66,9 +76,9 @@ export default function FooterBar({ctx}) {
         <IconButton
           onClick={()=>ctx.dispatch({type:"play_or_pause"})}
           sx={{
-            backgroundColor: "#2563eb",
-            color: "white",
-            "&:hover": { backgroundColor: "#1e40af" },
+            backgroundColor: "#fff",
+            color: "primary",
+            "&:hover": { backgroundColor: "#fff" },
           }}
         >
           {!player.paused ? <PauseIcon /> : <PlayArrowIcon />}
@@ -77,7 +87,7 @@ export default function FooterBar({ctx}) {
         <Tooltip title="下一章">
           <IconButton
             onClick={()=>ctx.dispatch({type:"change_chapter",payload:"next"})}
-            color="primary">
+            color="inherit">
             <SkipNextIcon />
           </IconButton>
         </Tooltip>
@@ -91,29 +101,39 @@ export default function FooterBar({ctx}) {
               : "单曲循环"
           }
         >
-          <IconButton onClick={()=>ctx.dispatch({type:"play_loop_mode"})} color="primary">
-            {loopMode === "one" ? <RepeatOneIcon /> : <LoopIcon />}
+          <IconButton 
+            className={!loopMode?"opacity-50":""}
+            onClick={()=>ctx.dispatch({type:"play_loop_mode"})} 
+            color="inherit">
+            {!loopMode ? <LoopIcon />:loopMode==1?<RepeatOneIcon /> : <LoopIcon />}
           </IconButton>
         </Tooltip>
       </Box>
       )}
+       <div
+        ref={ctx.bar2}
+        className="relative w-full  h-10 flex place-items-center"
+        onClick={(e)=>ctx.dispatch({type:"change_player_progress_chapter",payload:e})}
+      >     
+        {true||(<LinearProgress
+            variant="determinate"
+
+            value={progress2}
+            sx={{
+              height: 2,
+              // borderRadius: 4,
+              "& .MuiLinearProgress-bar": {
+                backgroundColor: "tranparent",
+              },
+              backgroundColor: "transparent",
+            }}
+        />)}
+     
+        <div style={{width:progress2+"%"}} className={` h-[1px] bg-white `}></div>
+  
+     
+      </div>
     </div>
   
   )
-}
-
-
-function usePlayer(ctx) {
-  const [_,refresh] = useState(false)
-  useEffect(()=>{
-    const player = ctx.player.current
-    const on_time_update = ()=>{
-      refresh(_=>!_)
-    }
-    player.addEventListener("ontimeupdate",on_time_update)
-    return ()=>{
-      player.removeEventListener("ontimeupdate",on_time_update)
-    }
-  },[ctx.player.current])
-
 }

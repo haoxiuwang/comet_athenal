@@ -1,6 +1,7 @@
 import React from "react";
 import { Fab, Zoom, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { animate } from "framer-motion";
 
 
 export default function AddContentButton({ctx}) {
@@ -23,7 +24,7 @@ export default function AddContentButton({ctx}) {
             zIndex: 1500,
           }}
         >
-          <AddIcon sx={{ fontSize: 28 }} />
+          <img className={`w-full h-full rounded-full ${ctx.loading?"animate-spin":""}`} src="./logo.png" />
         </Fab>
      
   );

@@ -1,9 +1,3 @@
-function s2t() {
-
+export function s2t(params) {
+ return true   
 }
-
-function t2s() {
-
-}
-
-return {t2s,s2t}

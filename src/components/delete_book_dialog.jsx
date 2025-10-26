@@ -23,11 +23,12 @@ export default function DeleteConfirmDialog({ ctx }) {
 
     const handleConfirm = () => {
         if (input.trim() === String(book.id)) { 
-            ctx.dispatch({type:"delete_book"},book)
+
+            ctx.dispatch({type:"delete_book",payload:book})
         }
     };
 
-  const handleClose = () => {   
+  const handleClose = () => {           
     ctx.dispatch({type:"cancel_delete_book"})
   };
 

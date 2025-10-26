@@ -1,15 +1,25 @@
 import { unpackPackFile } from "../../pack/unpack"
 import { navigate } from "../../router/useRouter"
-
-
-export function open_delete_book(ctx,book) {
-
+import {setStorage,loadStorage} from "../../storage.js"
+export async function unlocked(ctx) {
+  ctx.registered = {default:true}
+  setStorage("registered",ctx.registered)  
+}
+export function save_to_local_storage(ctx) {
+  setStorage("last",{book:ctx.book.id,time:ctx.player.current.currentTime})
+  setStorage("font_size",{defaudlt:ctx.article_font_size})
+  setStorage("loop_mode",{default:ctx.player.loop_mode})  
+}
+export function open_delete_book(ctx,book) {   
     ctx.delete_book = book
 }
-export async function delete_book(ctx,book){
+export async function delete_book(ctx,book){ 
+    ctx.books = ctx.books.filter((_book)=>_book.id!=book.id)
     await ctx.db.delete("audios",book.id)
     await ctx.db.delete("books",book.id)
     ctx.delete_book = null
+    console.log("delete_book");
+    
     
 }
 export function cancel_delete_book(ctx) {
@@ -21,14 +31,19 @@ export function navigate_to(ctx,href) {
   navigate(href)
 }
 export async function open_book(ctx,book){
+    if(ctx.book==book){
+      navigate("/article")
+      return
+    }
     ctx.book = book
+    if(!ctx.book.current_chapter_index)
+      ctx.book.current_chapter_index = 0
     try {
       const {blob} = await ctx.db.get("audios",book.id)
       ctx.player.current.src = URL.createObjectURL(blob)
       navigate("/article")
     } catch (error) {
-      console.log({db:ctx.db.db});
-      
+      console.log({db:ctx.db.db});      
     }
     
 }
@@ -41,10 +56,13 @@ export function on_search_input_change(ctx,text) {
     
 }
 export function add_book(ctx) {
-    ctx.input.current.click()
+  ctx.input.current.click()
 }
 export async function add_book_input_onchange(ctx,file){
-
+    
+    if(!file)return
+    ctx.loading = true
+    ctx.refreshAsync()
     const arrayBuffer = await file.arrayBuffer();
     let files = await unpackPackFile(arrayBuffer);
     files = files.map(f => {  
@@ -79,7 +97,7 @@ export async function add_book_input_onchange(ctx,file){
         console.log("save:",{error});        
     }
     
-    
+    ctx.loading = false
     
 }
 
