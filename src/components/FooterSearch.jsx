@@ -34,7 +34,11 @@ export default function FooterSearch({ctx}) {
             <List dense>
               {ctx.searched_books.map((book,index) => (
                 <Link
-                  onClick={(e)=>ctx.dispatch({type:"open_book",payload:book})}
+                  onClick={(e)=>{
+                    ctx.searched_text = ""
+                    ctx.searched_books = null
+                    ctx.dispatch({type:"open_book",payload:book})
+                  }}
                   key={book.id}
                   href="/article"
                 >

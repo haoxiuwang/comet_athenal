@@ -17,16 +17,19 @@ export default function Article({ctx}) {
  
    
     useEffect(()=>{
-        return ()=>{
+         
             if(!ctx.book){
                 ctx.navigate("/")
+                console.log("to index");                
+                return
             }
             ctx.dispatch({type:"save_to_local_storage"})
-        }
+        
     },[])
-
-    ctx.book = ctx.book??ctx.books?ctx.books[0]:null
-    if(ctx.book)
+    
+    
+    
+    if(!ctx.book)return
     return(
         <Box
             className="bg-purple-100"
@@ -47,7 +50,7 @@ export default function Article({ctx}) {
                         onSwipeRight:()=>{
                             ctx.dispatch({type:"switch_article_style"})                           
                         },
-                        className:"fixed inset-x-0 top-0 flex place-items-center place-content-center z-50"
+                        className:" fixed inset-x-0 top-0 flex place-items-center place-content-center z-50"
                     }}
                 >
                     <ArticleTopBar {...{ctx}}/>

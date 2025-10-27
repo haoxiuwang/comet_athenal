@@ -13,16 +13,15 @@ import PI from "../components/PI";
 
 
 export default function Home({ctx}) {
-  console.log("refresh");
   
-  useEffect(()=>{
-    if(ctx.books)
-      ctx.refresh()
-  },[ctx.books])
+  
+  // useEffect(()=>{
+  //   if(ctx.books)
+  //     ctx.refresh()
+  // },[ctx.books])
   if(ctx.books){
     ctx.books.sort((a,b)=>{
-      const r = b.add_time-a.add_time
-      console.log(r)
+      const r = b.add_time-a.add_time    
       return r
     })
   }

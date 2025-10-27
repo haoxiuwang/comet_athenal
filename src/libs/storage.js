@@ -15,7 +15,7 @@ export function loadStorage(keys) {
 
 
 export function setStorage(key,value) {
-    console.log({key:value})
+   
     value = JSON.stringify(value)
     localStorage.setItem(key,value)
    

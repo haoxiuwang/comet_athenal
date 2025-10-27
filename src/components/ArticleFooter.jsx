@@ -31,7 +31,7 @@ export default function FooterBar({ctx}) {
     
     <div 
       
-      className={`bg-gradient-to-b from-transparent to-blue-400 fixed bottom-0 inset-x-0 z-50  p-2`}>
+      className={`bg-gradient-to-b from-transparent to-indigo-500 fixed bottom-0 inset-x-0 z-50  p-2`}>
       {/* 顶部细进度条 */}
       {true||(<div
         ref={ctx.bar}

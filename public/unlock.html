@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+ 
+</head>
+<body>
+    <div class="fixed inset-0 flex place-content-center place-items-center flex-col space-y-2">
+        <input id="_input" class="border-2 border-black w-4/5 p-4" onChange="change(event)"/>
+        <div id="_number"></div>
+        <script>
+            const _input = document.querySelector("#_input")
+            const _number = document.querySelector("#_number")
+            function change(event) {
+                const time = _input.value
+                const result = new Date(time).getTime()/1000
+                _number.innerText = result
+            }
+        </script>
+    </div>
+</body>
+</html>

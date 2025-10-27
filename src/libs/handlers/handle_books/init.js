@@ -17,7 +17,7 @@ export default async function init(ctx) {
     // load data from localstorage
     
     let {last,font_size,loop_mode,registered} = loadStorage(["last","font_size","loop_mode","registered"],ctx)
-    console.log({registered});
+   
     
     if(!registered){
         const time = new Date().toString()
@@ -31,26 +31,28 @@ export default async function init(ctx) {
     ctx.registered = registered
     
     if(font_size)ctx.article_font_size = font_size.default
+    if(Number.isNaN(ctx.article_font_size) )ctx.article_font_size = 0
     if(loop_mode)ctx.player.loop_mode = loop_mode.default
-     
+    if(Number.isNaN(ctx.player.loop_mode))ctx.player.loop_mode = 0
     //load books from db
     ctx.books = await ctx.db.getAll("books")
     
+    if(!ctx.books)      
+        return
     
     ctx.books.map((book)=>{
         book.current_chapter_index = 0              
         book.current_subtitle_index = 0
         book.cover = URL.createObjectURL(book.cover)
     })
-   
     
-    if(!ctx.books)      
+    
+    console.log({last});
+    
+    if(!last||!last.book)      
         return
     
-    if(!last||!last.book||!last.time)      
-        return
-    
-    
+    last.time = last.time==undefined?0:last.time
     
     ctx.book = ctx.books.find((_book)=>_book.id==last.book)
     if(!ctx.book)        

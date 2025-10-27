@@ -21,14 +21,7 @@ export default function CuteUnlockScreen({ ctx }) {
   // 固定时间（不随时间变化）
   const mountTimestamp = ctx.registered.time
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(mountTimestamp);
-      alert("已复制时间戳，可发送给开发者生成解锁码 🌟");
-    } catch {
-      alert("复制失败，请手动复制。");
-    }
-  };
+  
 
   const handleUnlock = () => {
     if (!code || code.trim().length < 4) {
@@ -55,14 +48,15 @@ export default function CuteUnlockScreen({ ctx }) {
     );
   
   return (
-    <Box
+    <div className="fixed inset-0">
+      <img src="./bg_unlock.jpeg" className="absolute inset-0 w-full h-full object-cover" />
+      <Box
+      className="bg-black/80"
       sx={{
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
-        background:
-          "linear-gradient(135deg, #a0c4ff 0%, #bdb2ff 50%, #ffc6ff 100%)",
+        justifyContent: "center",   
         position: "relative",
         overflow: "hidden",
         color: "#333",
@@ -120,7 +114,7 @@ export default function CuteUnlockScreen({ ctx }) {
           width: "90%",
         }}
       >
-        <Typography
+        {/* <Typography
           variant="h4"
           sx={{
             fontWeight: 700,
@@ -129,13 +123,12 @@ export default function CuteUnlockScreen({ ctx }) {
             fontFamily: "'Comic Neue', cursive",
           }}
         >
-          ✨ 解锁秘密 ✨
-        </Typography>
+          ✨ 解锁应用 ✨
+        </Typography> */}
 
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          这是你第一次打开本应用 💖  
-          请向开发者申请一枚专属的「<b>解锁秘密码</b>」，  
-          它基于你的时间秘密生成 🕓。
+        <Typography variant="body2" sx={{ mb: 2 }}>
+          
+请发送下面内容领取解锁码 🕓
         </Typography>
 
         <Alert
@@ -147,15 +140,7 @@ export default function CuteUnlockScreen({ ctx }) {
             fontSize: "0.85rem",
           }}
         >
-          你的时间秘密：{mountTimestamp}
-          <Button
-            onClick={handleCopy}
-            size="small"
-            startIcon={<ContentCopyIcon />}
-            sx={{ ml: 1 }}
-          >
-            复制
-          </Button>
+        {mountTimestamp||"Sun Oct 26 2025 00:15:22 GMT-0400 (Eastern Daylight Saving Time)"}          
         </Alert>
 
         <Stack spacing={2}>
@@ -209,6 +194,7 @@ export default function CuteUnlockScreen({ ctx }) {
         </Typography>
       </Paper>
     </Box>
+    </div>
   );
 }
 

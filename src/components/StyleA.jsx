@@ -2,12 +2,21 @@ import { useEffect } from "react"
 
 export default function StyleA({ctx}) {
 
+  let _index = ctx.book.current_subtitle_index
+  console.log({_index},ctx.book.current_subtitles);
   
-  
-  const _index = ctx.book.current_subtitle_index
-  if(!ctx.book.current_subtitles)
-  ctx.book.current_subtitles = ctx.book.subtitles.filter((sub,index)=>Math.abs(sub.index-_index<20))
+  if(!_index)
+    _index = ctx.book.current_subtitle_index = 0
+  if(!ctx.book.current_subtitles||ctx.book.current_subtitles.length==0)
+  ctx.book.current_subtitles = ctx.book.subtitles.filter((sub,index)=>{
+    const result = Math.abs(sub.index-_index)
+    
+    return result<20
+  })
+
   const subtitles = ctx.book.current_subtitles
+ 
+  
   useEffect(()=>{
     const element = document.querySelector(`#sub_${_index}`)
     if(!element)return
@@ -18,7 +27,7 @@ export default function StyleA({ctx}) {
   });
   })
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="py-24 flex flex-col space-y-4 wrap-anywhere">
       {
         subtitles.map(({text,start,end,index},i)=>(
           <p 

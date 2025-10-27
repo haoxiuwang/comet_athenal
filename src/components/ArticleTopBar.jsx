@@ -61,7 +61,7 @@ export default function ArticleTopBar({ctx}) {
             overlap="circular"
             sx={{
               "& .MuiBadge-badge": {
-                backgroundColor: "#2563eb", // Tailwind 蓝色-600
+                backgroundColor: "#f6339a", // Tailwind 蓝色-600
                 color: "white",
               },
             }}

@@ -19,7 +19,7 @@ export default function StyleB({ctx}) {
         }}
       > 
         <img className="z-[-1] absolute top-0 left-0 w-full h-full object-fit object-cover" src={ctx.book.cover}/>
-        <div className="bg-white">{text}</div>
+        <div className="bg-white wrap-anywhere">{text}</div>
       </SwipeContainer>
       
   )

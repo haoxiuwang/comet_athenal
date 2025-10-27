@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Login } from "@mui/icons-material";
 import { app_ontimeupdate } from "./libs/handlers/handle_article/index.js";
 import CuteUnlockScreen from "./components/Unlock.jsx";
+import { navigate } from "./libs/router/useRouter.js";
 export default function App() {
     
     const ctx = useReducer(reducer,{
@@ -18,7 +19,8 @@ export default function App() {
             searched_books:[],
             article_font_size:1,//0:sm,1:lg,2:3xl
             locals:{},
-            loading:false
+            loading:false,
+            navigate
             
         }
     )

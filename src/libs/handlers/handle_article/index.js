@@ -2,7 +2,8 @@ import { setStorage } from "../../storage"
 import { navigate } from "../../router/useRouter"
 import { save_to_local_storage } from "../handle_books"
 export function article_font_size(ctx) {
-    console.log("font_size:",ctx.article_font_size);
+    
+    if(Number.isNaN(ctx.article_font_size)) ctx.article_font_size = 0
     ctx.article_font_size++
     if(ctx.article_font_size==3)ctx.article_font_size = 0   
     setStorage("font_size",ctx.article_font_size)
@@ -11,7 +12,7 @@ export function article_font_size(ctx) {
 }
 export function switch_article_style(ctx) { 
     
-    const href = ctx.path.indexOf("styleb") > -1 ? "/article/stylea" : "/article/styleb"
+    const href = /styleb/img.test(ctx.path) ? "/article/stylea" : /stylea/img.test(ctx.path) ?"/article/styleb":"/article/stylea"
     console.log(href);
     navigate(href)
 }
@@ -27,6 +28,8 @@ export async function play_or_pause(ctx) {
 
 
 export function play_loop_mode(ctx) {
+    if(Number.isNaN(ctx.player.loop_mode))
+        ctx.player.loop_mode = 0
     let m = ctx.player.loop_mode
     m = ctx.player.loop_mode = ++m==3?0:m
     setStorage("loop_mode",m)
@@ -83,6 +86,7 @@ export function app_ontimeupdate(ctx) {
     const p = ctx.player.current
     const current_time = p.currentTime
     const index = ctx.book.current_subtitle_index
+    
     let _index = ctx.book.subtitles.find((sub) => {
         return (current_time >= sub.start) && (current_time <= sub.end)
     })?.index

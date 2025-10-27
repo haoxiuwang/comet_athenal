@@ -31,13 +31,16 @@ export function navigate_to(ctx,href) {
   navigate(href)
 }
 export async function open_book(ctx,book){
+  
+    console.log(book);
+    
     if(ctx.book==book){
       navigate("/article")
       return
     }
     ctx.book = book
-    if(!ctx.book.current_chapter_index)
-      ctx.book.current_chapter_index = 0
+    // if(!ctx.book.current_chapter_index)
+    //   ctx.book.current_chapter_index = 0
     try {
       const {blob} = await ctx.db.get("audios",book.id)
       ctx.player.current.src = URL.createObjectURL(blob)
